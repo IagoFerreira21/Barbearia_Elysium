@@ -6,7 +6,7 @@ const tm=m=>pad(Math.floor(m/60))+':'+pad(m%60),mn=t=>t.split(':')[0]*60+ +t.spl
 const SL=[];for(let m=480;m<1110;m+=30)SL.push(tm(m));
 let D=L('bb',null)||{shop:{name:'Minha Barbearia',wa:'',addr:'',about:'Corte, barba e estilo. Agende seu horário online.',photos:[]},services:[{id:1,n:'Corte',p:40,m:30},{id:2,n:'Barba',p:30,m:30},{id:3,n:'Corte + Barba',p:65,m:60}],pros:[{id:1,n:'Barbeiro 1'}],clients:[],appts:[],blocks:[]};
 let U=L('bbu',[]),ses=L('bbs',null),view=ses?'app':'home',tab='painel',day=today(),P=0,am='in',inst=null;
-if(!U.length){U=[{m:'demo@barbearia.com',p:'1234'}];W('bbu',U)}
+   U=U.filter(u=>u.m!='demo@barbearia.com');W('bbu',U);
 D.shop.logo=D.shop.logo||'';D.cuts=D.cuts||[];D.shop.ig=D.shop.ig||'';
 if(D.shop.name=='Minha Barbearia'){Object.assign(D.shop,{name:'Barbearia Elysium',wa:'5579998172709',addr:'Largo Tobias Barreto, nº 8, Centro, Itabaianinha/SE (ao lado do Colégio Criativo)',about:'Cuide do seu visual. Ambiente climatizado e atendimento com hora marcada.',logo:'logo.png',ig:'barbeariaelysium'});if(!D.cuts.length)D.cuts=[{id:1,img:'cut1.jpg',t:'Degradê'},{id:2,img:'cut2.jpg',t:'Degradê com barba'}];W('bb',D)}
 if(D.shop.wa=='557998172709'){D.shop.wa='5579998172709';W('bb',D)}
