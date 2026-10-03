@@ -6,7 +6,7 @@ const tm=m=>pad(Math.floor(m/60))+':'+pad(m%60),mn=t=>t.split(':')[0]*60+ +t.spl
 const SL=[];for(let m=480;m<1110;m+=30)SL.push(tm(m));
 let D=L('bb',null)||{shop:{name:'Minha Barbearia',wa:'',addr:'',about:'Corte, barba e estilo. Agende seu horário online.',photos:[]},services:[{id:1,n:'Corte',p:40,m:30},{id:2,n:'Barba',p:30,m:30},{id:3,n:'Corte + Barba',p:65,m:60}],pros:[{id:1,n:'Barbeiro 1'}],clients:[],appts:[],blocks:[]};
 let U=L('bbu',[]),ses=L('bbs',null),view=ses?'app':'home',tab='painel',day=today(),P=0,am='in',inst=null;
-   U=U.filter(u=>u.m!='demo@barbearia.com');W('bbu',U);
+if(!U.length){U=[{m:'demo@barbearia.com',p:'1234'}];W('bbu',U)}
 D.shop.logo=D.shop.logo||'';D.cuts=D.cuts||[];D.shop.ig=D.shop.ig||'';
 if(D.shop.name=='Minha Barbearia'){Object.assign(D.shop,{name:'Barbearia Elysium',wa:'5579998172709',addr:'Largo Tobias Barreto, nº 8, Centro, Itabaianinha/SE (ao lado do Colégio Criativo)',about:'Cuide do seu visual. Ambiente climatizado e atendimento com hora marcada.',logo:'logo.png',ig:'barbeariaelysium'});if(!D.cuts.length)D.cuts=[{id:1,img:'cut1.jpg',t:'Degradê'},{id:2,img:'cut2.jpg',t:'Degradê com barba'}];W('bb',D)}
 if(D.shop.wa=='557998172709'){D.shop.wa='5579998172709';W('bb',D)}
@@ -34,8 +34,7 @@ ${s.photos.length?`<h2>Nosso espaço</h2><div class=ph>${s.photos.map(p=>`<figur
 function fillT(){if(!$('#bt'))return;let f=free($('#bd').value,$('#bp').value,$('#bs').value);$('#bt').innerHTML=f.length?f.map(t=>`<option>${t}</option>`).join(''):'<option value="">Sem horários neste dia</option>'}
 function book(e){e.preventDefault();let sid=+$('#bs').value,pid=+$('#bp').value,d=$('#bd').value,t=$('#bt').value,n=$('#bn').value;if(!t){alert('Sem horários neste dia. Escolha outra data.');return false}mk(d,t,pid,sid,n,$('#bph').value);wa(`Olá! Sou ${n}. Agendei ${svc(sid).n} com ${pr(pid)} no dia ${d.split('-').reverse().join('/')} às ${t}.`);alert('Agendamento salvo!');fillT();return false}
 /* ---------- login fictício ---------- */
-function auth(){return `<div class=w style="max-width:400px"><h1>${am=='in'?'Entrar':'Criar conta'}</h1><p class=tag>Login fictício: os dados ficam só neste aparelho. Demo: demo@barbearia.com / 1234</p>
-<form class=c onsubmit="return doAuth(event)">${am=='up'?'<label>Nome da barbearia<input id=an required></label><label>WhatsApp com DDD<input id=aw type=tel required></label>':''}
+function auth(){return `<div class=w style="max-width:400px"><h1>${am=='in'?'Entrar':'Criar conta'}</h1><form class=c onsubmit="return doAuth(event)">${am=='up'?'<label>Nome da barbearia<input id=an required></label><label>WhatsApp com DDD<input id=aw type=tel required></label>':''}
 <label>E-mail<input id=ae type=email required></label><label>Senha<input id=ap type=password minlength=4 required></label><button class=b>${am=='in'?'Entrar':'Cadastrar'}</button></form>
 <p><a href="#" onclick="am=am=='in'?'up':'in';go();return false">${am=='in'?'Criar conta':'Já tenho conta'}</a> &nbsp; <a href="#" onclick="view='home';go();return false">Voltar ao site</a></p></div>`}
 function doAuth(e){e.preventDefault();let m=$('#ae').value.toLowerCase(),p=$('#ap').value;if(am=='up'){if(U.some(u=>u.m==m)){alert('Este e-mail já está cadastrado.');return false}U.push({m,p});W('bbu',U);D.shop.name=$('#an').value;D.shop.wa=$('#aw').value;save()}else if(!U.some(u=>u.m==m&&u.p==p)){alert('E-mail ou senha incorretos.');return false}ses=m;W('bbs',m);view='app';tab='painel';go();return false}
@@ -43,10 +42,15 @@ function doAuth(e){e.preventDefault();let m=$('#ae').value.toLowerCase(),p=$('#a
 const T=[['painel','Painel'],['agenda','Agenda'],['servicos','Serviços'],['pros','Profissionais'],['clientes','Clientes'],['fat','Faturamento'],['perfil','Perfil']];
 function appv(){return `<nav>${T.map(t=>`<button class="b m ${tab==t[0]?'':'s'}" onclick="tab='${t[0]}';go()">${t[1]}</button>`).join('')}<button class="b s m" onclick="view='home';go()">Ver site</button><button class="b s m" onclick="ses=null;localStorage.removeItem('bbs');view='home';go()">Sair</button><button id=ins class="b m" hidden onclick="inst&&inst.prompt()">Instalar app</button></nav><div class=w>${V[tab]()}</div>`}
 const rv=a=>a.reduce((s,x)=>s+x.v,0);
-function painel(){let t=today(),ap=D.appts.filter(a=>a.d==t&&a.st!='cancelado').sort((a,b)=>a.t<b.t?-1:1),dn=D.appts.filter(a=>a.st=='concluido');return `<h2>Painel</h2><div class=g>
+function painel(){let t=today(),ap=D.appts.filter(a=>a.d==t&&a.st!='cancelado').sort((a,b)=>a.t<b.t?-1:1),dn=D.appts.filter(a=>a.st=='concluido');return `<h2>Painel</h2>${linkCard()}<div class=g>
 <div class=c>Hoje<div class=k>${ap.length}</div>agendamentos</div><div class=c>Faturado hoje<div class=k>${R(rv(dn.filter(a=>a.d==t)))}</div></div>
 <div class=c>Faturado no mês<div class=k>${R(rv(dn.filter(a=>a.d.slice(0,7)==t.slice(0,7))))}</div></div><div class=c>Clientes<div class=k>${D.clients.length}</div></div></div>
 <h3>Hoje</h3><div class=c>${ap.map(a=>`<div class=r><span><b>${a.t}</b> ${esc(a.c)}, ${esc(svc(a.sid).n)}</span><span class=tag>${esc(pr(a.pid))}</span></div>`).join('')||'Nenhum agendamento para hoje. Compartilhe o link do site para receber reservas.'}</div>`}
+/* link do site */
+const siteUrl=()=>location.href.split('#')[0].split('?')[0].replace(/index\.html$/,'');
+function linkCard(){if(location.protocol=='file:')return `<div class=c><b>Link do seu site</b><p>O link só existe depois de publicar o site (hospedagem). Depois de publicar, abra o endereço no celular e este botão passa a copiar o link certo.</p></div>`;return `<div class=c><b>Link do seu site</b><p class=tag style="word-break:break-all">${esc(siteUrl())}</p><div class=acts><button class="b m" onclick="cpLink()">Copiar link</button><button class="b s m" onclick="shLink()">Compartilhar</button></div><small style="color:var(--mut)">Cole na bio do Instagram, no status ou na conversa do WhatsApp.</small></div>`}
+function cpLink(){let u=siteUrl();(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>alert('Link copiado!'),()=>prompt('Copie o link:',u))}
+function shLink(){let u=siteUrl(),t='Agende seu horário na '+D.shop.name;if(navigator.share)navigator.share({title:D.shop.name,text:t,url:u}).catch(()=>{});else window.open('https://wa.me/?text='+encodeURIComponent(t+': '+u),'_blank')}
 /* agenda */
 function agenda(){if(!D.pros.some(p=>p.id==P))P=D.pros[0]?.id;if(!P)return '<div class=c>Cadastre um profissional para usar a agenda.</div>';let s=taken(day,P);return `<h2>Agenda</h2><div class=g>
 <label>Data<input type=date value=${day} onchange="day=this.value;go()"></label>
