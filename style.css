@@ -28,3 +28,13 @@ dialog::backdrop{background:#000a}
 figure{margin:0}figcaption{font-size:13px;margin:4px 0}
 .th{width:56px;height:56px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:10px}
 .acts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.sv{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.sv:last-child{border-bottom:0}
+.sv .n{flex:1}.sv .p{text-align:right;line-height:1.3}.sv .p b{display:block;font-size:16px}.sv .p small{color:var(--mut)}
+.c h3{margin-top:0}#bsq{margin:6px 0 4px;padding:12px}
+.car{position:relative;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.car::-webkit-scrollbar{display:none}
+.car figure{flex:0 0 78%;max-width:340px;scroll-snap-align:center;position:relative;border-radius:16px;overflow:hidden;box-shadow:0 10px 24px #000b;cursor:pointer;background:var(--card)}
+.car img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 30%;display:block}
+.car figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;padding:34px 12px 10px;font-weight:600;background:linear-gradient(transparent,#000d)}
+.dr{display:flex;gap:10px;align-items:center;justify-content:center}.dots{display:flex;gap:6px;align-items:center}.dots i{width:7px;height:7px;border-radius:7px;background:var(--line);transition:.2s}.dots i.on{width:18px;background:var(--ac)}
+@media(hover:none){.arr{display:none}}
+.lb{position:fixed;inset:0;background:#000e;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;padding:16px;cursor:pointer}.lb img{max-width:100%;max-height:80vh;border-radius:12px}.lb p{margin:10px 0 0;font-weight:600}
